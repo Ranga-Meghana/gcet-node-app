@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
 
 const app = express();
@@ -57,6 +58,7 @@ app.post("/login", (req, res, next) => {
 
 app.listen(8080, () => {
   console.log("Server Started on port 8080");
+  mongoose.connect("mongodb://localhost:27017/gcet");
 });
 
 
