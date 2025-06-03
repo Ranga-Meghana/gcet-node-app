@@ -17,21 +17,30 @@ const userSchema = mongoose.Schema({
 
 const user = mongoose.model("User", userSchema);
 
-app.get("/register", async(req, res)=>{
-    const result = await user.insertOne({name: "John"});
+app.post("/register", async(req, res)=>{
+    const {name} = req.body
+    const result = await user.insertOne({name: name});
     return res.json(result);
 })
 
 app.get("/", (req, res) => {
-  return res.send("Hello :)");
+  return res.send("Hello! Good morning :)");
 });
 
 app.get("/weather", (req, res) => {
-  return res.send("28"); 
+  return res.send("Heyy!! Today's weather is 28"); 
 });
 
+app.get("/name", (req, res) => {
+  return res.send("Hello Rishitha!"); 
+});
 
-
-app.get("/home", (req, res) => {
-  return res.send(""); 
+app.get("/products", (req, res) => {
+  const products = [
+    { id: 1, name: "Laptop", price: 999 },
+    { id: 2, name: "Phone", price: 499 },
+    { id: 3, name: "Headphones", price: 199 }
+  ];
+  
+  return res.json(products);
 });
