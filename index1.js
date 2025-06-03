@@ -50,12 +50,11 @@ app.get("/name", (req, res) => {
   return res.send("Hello Meghana!"); 
 });
 
-app.get("/products", (req, res) => {
-  const products = [
-    { id: 1, name: "Laptop", price: 999 },
-    { id: 2, name: "Phone", price: 499 },
-    { id: 3, name: "Headphones", price: 199 }
-  ];
-  
-  return res.json(products);
+app.get("/products", async (req, res) => {
+  try {
+    const products = await product.find(); 
+    return res.json(products);
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching products", error });
+  }
 });
