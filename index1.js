@@ -13,13 +13,28 @@ app.listen(8080, () => {
 
 const userSchema = mongoose.Schema({
     name: {type: String},
+    email: {type: String},
+    pass: {type: String},
 });
+
+const productSchema = mongoose.Schema({
+    name: { type: String },
+    price: { type: Number },
+});
+const product = mongoose.model("Product", productSchema)
 
 const user = mongoose.model("User", userSchema);
 
 app.post("/register", async(req, res)=>{
-    const {name} = req.body
-    const result = await user.insertOne({name: name});
+    const {name,email,pass} = req.body
+    const result = await user.insertOne({name: name,email: email, pass: pass});
+    return res.json(result);
+})
+
+app.post("/login", async(req, res)=>{
+    const {email,pass} = req.body
+    const result = await user.findOne({email, pass});
+    if(!result) return res.json({message:"Invalid User or Password"})
     return res.json(result);
 })
 
@@ -32,7 +47,7 @@ app.get("/weather", (req, res) => {
 });
 
 app.get("/name", (req, res) => {
-  return res.send("Hello Rishitha!"); 
+  return res.send("Hello Meghana!"); 
 });
 
 app.get("/products", (req, res) => {
