@@ -4,4 +4,5 @@ const userSchema = mongoose.Schema({
     email: {type: String},
     pass: {type: String},
 });
-const user = mongoose.model("User", userSchema);
+
+export default mongoose.model("User", userSchema);
