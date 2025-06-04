@@ -5,14 +5,16 @@ const orderRouter = express.Router()
 
 orderRouter.post("/new", async(req, res)=>{
     const {email,price} = req.body
-    const result = await orderModel.insertOne({email, price});
+    const newOrder = new orderModel({ email, price });
+    const result = await newOrder.save();
     return res.json(result);
 })
 
 orderRouter.get("/:id", async(req, res)=>{
     const email = req.params.id
-    const result = await orderModel.findOne({email},{_id:0, price:1});
-    return res.json(result);
+    const results = await orderModel.find({ email }, { _id: 0, price: 1 });
+    return res.json(results);
+
 })
 
 export default orderRouter
