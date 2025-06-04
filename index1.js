@@ -26,15 +26,9 @@ app.use("/products", productRouter);
  //console.log("Server Started on port 8080");
 //});
 
-mongoose.connect(`${MONGODB_URI}`)
-  .then(() => {
-    app.listen(8080, () => {
-      console.log("Server started on port 8080");
-    });
-  })
-  .catch((error) => {
-    console.error("DB connection error:", error);
-  });
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.error(err));
 
 app.get("/", (req, res) => {
   return res.send("Hello! Good morning :)");
@@ -46,5 +40,9 @@ app.get("/weather", (req, res) => {
 
 app.get("/name", (req, res) => {
   return res.send("Hello Meghana!"); 
+});
+
+app.listen(8080, () => {
+  console.log("Server Started on port 8080");
 });
 
