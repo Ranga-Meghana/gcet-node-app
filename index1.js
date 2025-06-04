@@ -15,16 +15,26 @@ const MONGODB_URI = process.env.MONGODB_URI
 app.use(cors()); 
 app.use(express.json());
 
-app.listen(8080, () => {
-    mongoose.connect(`${MONGODB_URI}`);    
-  console.log("Server Started on port 8080");
-});
-
 app.use("/orders", orderRouter); 
 
 app.use("/users", userRouter);
 
 app.use("/products", productRouter);
+
+//app.listen(8080, () => {
+ //mongoose.connect(`${MONGODB_URI}`);
+ //console.log("Server Started on port 8080");
+//});
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    app.listen(8080, () => {
+      console.log("Server started on port 8080");
+    });
+  })
+  .catch((error) => {
+    console.error("DB connection error:", error);
+  });
 
 app.get("/", (req, res) => {
   return res.send("Hello! Good morning :)");
@@ -37,3 +47,4 @@ app.get("/weather", (req, res) => {
 app.get("/name", (req, res) => {
   return res.send("Hello Meghana!"); 
 });
+
