@@ -5,7 +5,7 @@ const orderRouter = express.Router()
 
 orderRouter.post("/new", async(req, res)=>{
     const {email,price} = req.body
-    const result = await orderModel.create({email, price});
+    const result = await orderModel.insertOne({email, price});
     return res.json(result);
 })
 
