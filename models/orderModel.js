@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const orderSchema = mongoose.Schema({
-  email: {type: String,required: true},
-  price: {type: Number,required: true},}, 
-  { timestamps: true });
-
+    email: { type: String },
+    price: { type: Number },
+});
 export default mongoose.model("Order", orderSchema)

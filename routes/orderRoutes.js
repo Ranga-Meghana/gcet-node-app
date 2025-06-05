@@ -3,25 +3,17 @@ import orderModel from '../models/orderModel.js'
 
 const orderRouter = express.Router()
 
-orderRouter.post("/new", async (req, res) => {
-  try {
-    const { email, price } = req.body;
-
-    const newOrder = new orderModel({ email, price });
-    const savedOrder = await newOrder.save();
-
-    return res.json(savedOrder);
-  } catch (err) {
-    return res.status(500).json({ message: "Error creating order", error: err.message });
-  }
-});
-
+orderRouter.post("/new", async(req, res)=>{
+    const {email,price} = req.body
+    const result = await orderModel.insertOne({email, price});
+    return res.json(result);
+})
 
 orderRouter.get("/:id", async(req, res)=>{
     const email = req.params.id
-    const results = await orderModel.find({ email }, { _id: 0, price: 1 });
-    return res.json(results);
-
+    const result = await orderModel.findOne({email},{_id:0, price:1});
+    return res.json(result);
 })
+
 
 export default orderRouter
