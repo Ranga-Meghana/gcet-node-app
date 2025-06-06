@@ -5,7 +5,6 @@ import userRouter from "./routes/userRoutes.js";
 import productRouter from "./routes/productRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken'
 
 dotenv.config();
 
