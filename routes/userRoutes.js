@@ -1,42 +1,72 @@
-import express from 'express'
+import express from 'express';
 import userModel from "../models/userModel.js";
+import bcrypt from 'bcryptjs';
+import jwt from "jsonwebtoken";
 
-const userRouter = express.Router()
+const SECRET_KEY = "helloworld";
+const userRouter = express.Router();
 
+// REGISTER ROUTE
 userRouter.post("/register", async (req, res) => {
   const { name, email, pass } = req.body;
+
   try {
-    const result = await userModel.create({ name, email, pass });
+    const hashpassword = await bcrypt.hash(pass, 10);
+    const result = await userModel.create({ name, email, pass: hashpassword });
     res.json({ message: "User registered successfully", user: result });
   } catch (err) {
     console.error("Registration error:", err);
     res.status(500).json({ message: "Registration failed" });
   }
 });
+
+// LOGIN ROUTE
 userRouter.post("/login", async (req, res) => {
   const { email, pass } = req.body;
-  const result = await userModel.findOne({ email, pass });
 
-  if (!result) return res.json({ message: "Invalid User or Password" });
+  try {
+    const result = await userModel.findOne({ email });
+    if (!result) return res.status(401).json({ message: "Invalid Email or Password" });
 
-  return res.json({
-    token: "dummy_token_123", 
-    name: result.name,
-    email: result.email
-  });
+    const isMatch = await bcrypt.compare(pass, result.pass);
+    if (!isMatch) return res.status(401).json({ message: "Invalid Email or Password" });
+
+    const token = jwt.sign({ email: result.email, id: result._id }, SECRET_KEY);
+    return res.json({ user: result, token: token });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Login failed" });
+  }
 });
 
+// GET USER BY ID
+userRouter.get("/:id", async (req, res) => {
+  const id = req.params.id;
 
-userRouter.get("/:id", async(req, res)=>{
-    const {name,email,pass} = req.params.id
-    const result = await userModel.findOne({email});
+  try {
+    const result = await userModel.findById(id);
+    if (!result) return res.status(404).json({ message: "User not found" });
+
     return res.json(result);
-})
+  } catch (err) {
+    console.error("Fetch user error:", err);
+    res.status(500).json({ message: "Error fetching user" });
+  }
+});
 
-userRouter.get("/:id/name", async(req, res)=>{
-    const email = req.params.id
-    const result = await userModel.findOne({email},{_id:0,name:1});
+// GET USER NAME BY EMAIL
+userRouter.get("/email/:email/name", async (req, res) => {
+  const email = req.params.email;
+
+  try {
+    const result = await userModel.findOne({ email }, { _id: 0, name: 1 });
+    if (!result) return res.status(404).json({ message: "User not found" });
+
     return res.json(result);
-})
+  } catch (err) {
+    console.error("Fetch name error:", err);
+    res.status(500).json({ message: "Error fetching name" });
+  }
+});
 
-export default userRouter
+export default userRouter;
