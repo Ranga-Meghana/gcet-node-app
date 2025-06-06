@@ -34,7 +34,7 @@ app.get("/weather", (req, res) => {
 });
 
 app.get("/name", (req, res) => {
-  return res.send("Hello Rishitha!"); 
+  return res.send("Hello Meghana!"); 
 });
 
 
